@@ -7,19 +7,19 @@ class Hand(Deck):
 
         super(Hand, self).__init__()
 
-        self.hands = {0: {'hand':[p1, p2], 'soft': False, 'total': 0}}
+        self.hands = {1: {'hand':[p1, p2], 'soft': False, 'total': 0}}
         self.dealer = [du]
 
-        self.calc_hand_total(0)
+        self.calc_hand_total(1)
 
 
-    def get_hand_total(self, handindex=0):
+    def get_hand_total(self, handindex=1):
 
         return self.hands[handindex]['total']
 
 
 
-    def calc_hand_total(self, handindex=0):
+    def calc_hand_total(self, handindex=1):
 
         hand = self.hands[handindex]['hand']
 
@@ -48,6 +48,7 @@ class Hand(Deck):
                 if card[:-1] == "A":
                     hard_total += self.values[card]
                     soft_total += 1
+                    self.hands[handindex]['soft'] = True
 
                 else:
                     hard_total += self.values[card]
@@ -69,13 +70,13 @@ class Hand(Deck):
         return soft_total, hard_total
 
 
-    def hit(self, card, handindex=0):
+    def hit(self, card, handindex=1):
 
         self.hands[handindex]['hand'].append(card)
         self.calc_hand_total(handindex)
 
 
-    def split(self, handindex=0):
+    def split(self, handindex=1):
 
         self.hands[max(self.hands.keys())+1] = {'hand':[self.hands[handindex]['hand'].pop()], 'soft': False, 'total': 0}
 
@@ -84,7 +85,9 @@ class Hand(Deck):
 
         string = ""
         for i in self.hands.keys():
-            string += f"Hand {i+1}: {self.hands[i]['hand']}\n"
+            string += f"Hand {i}: {self.hands[i]['hand']}\n"
+            # soft, hard = self.calc_hand_total(handindex=i)
+            # string += f"Total: {soft}/{hard}\n\n" if self.hands[i]['soft'] else f"Total: {self.hands[i]['total']}\n\n"
             string += f"Total: {self.hands[i]['total']}\n"
             string += f"Soft: {self.hands[i]['soft']}\n\n"
 
